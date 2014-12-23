@@ -10,7 +10,7 @@ class Matchbox(object):
         if answer:
             self.answer = answer
         else:
-            self.answer = random.choice(self.candidates)
+            self.answer = random.choice(Matchbox.candidates)
 
     def answer(self):
         return self.answer
@@ -20,7 +20,11 @@ class Matchbox(object):
 
 class Gene(object):
 
+    counter = 0
+
     def __init__(self, answers=False):
+        self.id = Gene.counter
+        Gene.counter += 1
         self.matchboxes = []
         if answers:
             for i in range(10):
@@ -42,6 +46,9 @@ class Gene(object):
                 score += 1
         return score
 
+    def whois(self):
+        return self.id
+
 class Genes(object):
 
     def __init__(self):
@@ -56,7 +63,7 @@ class Genes(object):
 
             self.genes = sorted(self.genes, key=lambda gene: gene.evaluate(right_answers))
             for gene in self.genes:
-                print gene.answers(), gene.evaluate(right_answers)
+                print '(g%03d)' % gene.whois(), gene.answers(), gene.evaluate(right_answers)
             for i in range(2):
                 self.genes.pop(0)
             for baby in breed(self.genes[-1], self.genes[-2]):
@@ -67,6 +74,8 @@ class Genes(object):
                 break
 
             self.num_selections += 1
+
+            print
 
 def breed(g1, g2):
     # g1, g2: Gene objects
